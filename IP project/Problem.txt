@@ -1,0 +1,31 @@
+When an Android app is in the background, it may not have the same capabilities as when it's in the foreground due to the Android system's background execution limitations. In the context of a VoIP (Voice over Internet Protocol) application like Linphone, this behavior might be affected by Android's background restrictions, battery optimizations, or doze mode. Here are some common reasons why Linphone might not receive calls when in the background:
+
+1. **Background Execution Limitations:**
+   - Android imposes restrictions on background execution to enhance system performance and battery life. Background services and tasks may be limited in terms of resources, which could impact Linphone's ability to receive calls.
+
+2. **Battery Optimization:**
+   - Some Android devices have aggressive battery optimization settings that may limit the background activities of apps. Ensure that Linphone is not being excessively optimized to save battery, which could affect its ability to handle incoming calls.
+
+3. **Wake Locks:**
+   - Android may limit network access for apps in the background. Linphone might need to use wake locks or other mechanisms to ensure that it can maintain a network connection and receive incoming call notifications.
+
+4. **Push Notifications:**
+   - Linphone may use push notifications to alert the user about incoming calls even when the app is in the background. Ensure that push notifications are configured correctly, and the Linphone app registers for push notifications with the server.
+
+5. **Foreground Service:**
+   - Linphone may need to run as a foreground service to maintain priority and continue handling incoming calls even when in the background. Ensure that Linphone uses the appropriate mechanisms to run as a foreground service.
+
+6. **Network Connectivity:**
+   - Ensure that the device has a stable network connection, even when in the background. Network changes, such as switching between Wi-Fi and mobile data, may affect Linphone's ability to receive calls.
+
+7. **Android Doze Mode:**
+   - Doze mode is a power-saving feature in Android that restricts app activities when the device is idle. Ensure that Linphone handles doze mode appropriately, especially if it needs to maintain a continuous network connection.
+
+To address these issues, you may need to:
+
+- Adjust Linphone's background behavior to comply with Android's restrictions.
+- Implement proper handling of push notifications.
+- Use wake locks or other mechanisms to keep the app alive in the background.
+- Consider running Linphone as a foreground service when needed.
+
+It's crucial to refer to Linphone's documentation and community discussions to find specific solutions or updates related to background call handling on the platform. Keep in mind that Android's behavior and restrictions can vary across different versions and devices.

@@ -1,0 +1,48 @@
+In Android, a wake lock is a mechanism that allows an app to keep the device's CPU and screen active even when the device would normally go to sleep (screen off) or into a low-power state. Wake locks are used to prevent the device from entering sleep mode and ensure that certain operations, such as maintaining a network connection, can continue to operate even when the device is not actively in use.
+
+For Linphone, a VoIP application that needs to maintain a network connection for incoming call notifications, using wake locks can be important to ensure that the app remains responsive even when it's running in the background. When the device is in a low-power state or the screen is off, Android may restrict network access for background apps to conserve battery.
+
+Here's how wake locks work and how they can be used in the context of Linphone:
+
+### Types of Wake Locks:
+
+1. **Partial Wake Lock:**
+   - A partial wake lock allows the CPU to remain active while the screen is off. It's suitable for background tasks that don't require the screen to be on.
+
+2. **Full Wake Lock:**
+   - A full wake lock keeps both the CPU and the screen active. While effective, it consumes more power and is generally reserved for scenarios where the screen needs to be on.
+
+### Using Wake Locks in Linphone:
+
+1. **Acquiring a Wake Lock:**
+   - Linphone can acquire a wake lock when it needs to maintain a network connection for incoming call notifications. This is typically done using the `PowerManager` system service in Android.
+
+   ```java
+   PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+   WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "LinphoneWakeLock");
+   wakeLock.acquire();
+   ```
+
+   Here, a partial wake lock is acquired. The tag "LinphoneWakeLock" is a string identifier for debugging purposes.
+
+2. **Releasing the Wake Lock:**
+   - It's essential to release the wake lock when it's no longer needed to avoid unnecessary battery consumption.
+
+   ```java
+   if (wakeLock.isHeld()) {
+       wakeLock.release();
+   }
+   ```
+
+### Considerations:
+
+- **Battery Impact:**
+  - While wake locks are useful for ensuring that background tasks can continue to run, they can have an impact on battery life. It's crucial to use them judiciously and release them when no longer necessary.
+
+- **Foreground Service:**
+  - In addition to wake locks, Linphone may also consider running as a foreground service when handling incoming calls. A foreground service has a higher priority, and it's less likely to be restricted by the system.
+
+- **Doze Mode and App Standby:**
+  - Android's Doze mode and App Standby are power-saving features that can affect background operations. Wake locks may not be sufficient to overcome the restrictions imposed by these features, so additional strategies like push notifications may be needed.
+
+Using wake locks is just one aspect of maintaining network connectivity for incoming call notifications in the background. It's important to consider other factors like Android's background execution limitations and battery optimizations when designing the background behavior of a VoIP application like Linphone.

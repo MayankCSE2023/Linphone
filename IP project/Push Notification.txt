@@ -1,0 +1,64 @@
+Push notifications are a crucial mechanism for alerting users about events, such as incoming calls, even when the app is not actively running in the foreground. This is particularly important for VoIP applications like Linphone. Here's how Linphone might use push notifications to handle incoming calls in the background:
+
+### 1. **Push Notification Basics:**
+   - Push notifications are messages that are "pushed" from a server to a user's device. They can be used to notify the user about various events, such as new messages, updates, or incoming calls.
+
+### 2. **Server-Side Implementation:**
+   - Linphone's server (or a dedicated push notification server) needs to implement the server-side logic for sending push notifications. This involves interacting with the push notification service providers (e.g., Firebase Cloud Messaging (FCM), Apple Push Notification Service (APNs)).
+
+### 3. **Client Registration:**
+   - Linphone needs to register the device for push notifications with the server. This typically involves obtaining a registration token (for FCM) or a device token (for APNs) and sending it to the server.
+
+### 4. **Push Notification Payload:**
+   - When an incoming call occurs, the Linphone server sends a push notification with a specific payload that contains information about the call. This payload may include details such as the caller's name, a message, or a custom identifier.
+
+### 5. **Handling Push Notifications on the Client:**
+   - Linphone's client (Android app) needs to implement logic to handle incoming push notifications. This involves processing the received notification, extracting relevant information, and presenting it to the user.
+
+### 6. **Opening the App on Notification Click:**
+   - When the user taps on the push notification, Linphone should open or bring the app to the foreground, allowing the user to respond to the incoming call.
+
+### 7. **Foreground and Background Handling:**
+   - Linphone needs to handle push notifications differently based on whether the app is in the foreground or background. In the background, the notification may trigger an alert, and in the foreground, Linphone can handle it directly.
+
+### 8. **Security Considerations:**
+   - Ensure that the push notification mechanism is secure and follows best practices, especially when transmitting sensitive information related to incoming calls.
+
+### 9. **Implementation with FCM (Firebase Cloud Messaging):**
+   - For Android, Linphone may use FCM as the push notification service. This involves integrating the FCM SDK into the app, handling registration tokens, and implementing the necessary logic for receiving and processing FCM messages.
+
+### Example (Kotlin - FCM):
+
+Here's a simplified example of how Linphone might handle incoming push notifications using FCM in Kotlin:
+
+```kotlin
+class MyFirebaseMessagingService : FirebaseMessagingService() {
+
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        // Handle incoming push notification
+        val data = remoteMessage.data
+        if (data.containsKey("callInfo")) {
+            val callInfo = data["callInfo"]
+            // Process the call information (e.g., display a notification)
+            // ...
+        }
+    }
+
+    override fun onNewToken(token: String) {
+        // Handle token refresh (e.g., send the new token to the Linphone server)
+        // ...
+    }
+}
+```
+
+This code demonstrates the basics of receiving and handling incoming FCM messages.
+
+### Additional Notes:
+
+- It's important to follow the documentation of the chosen push notification service (FCM, APNs) for proper integration and handling.
+
+- Linphone's server-side implementation must be coordinated with the client-side push notification handling.
+
+- Care should be taken to handle scenarios where the user might have disabled push notifications or when the app is not installed.
+
+Implementing push notifications requires careful consideration of the chosen push service, security, and the user experience. Always refer to the official documentation for the specific technologies used (e.g., FCM, APNs) for the most up-to-date information.
